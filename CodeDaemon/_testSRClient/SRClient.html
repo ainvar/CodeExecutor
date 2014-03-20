@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>SignalR client</title>
+
+        <script src="C:\Users\piepal\Documents\Visual Studio 2012\Projects\Labs2\RxKatServer\CodeDaemon\Scripts\jquery-1.6.4.min.js" type="text/javascript"></script>
+        <script src="C:\Users\piepal\Documents\Visual Studio 2012\Projects\Labs2\RxKatServer\CodeDaemon\Scripts\jquery.signalR-2.0.0-rc1.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="http://localhost:999/signalr/hubs"></script>
+
+            <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
+
+        <script type="text/javascript">
+            $(function () {
+                // Proxy created on the fly
+                var NotifyHub = $.connection.NotifyHub;
+                // Start the connection
+                $.connection.hub.url = 'http://localhost:999/signalr';
+                $.connection.hub.logging = true;
+                //$.connection.hub.start( { transport: ['webSockets', 'longPolling'] }).done(function () {
+                //    alert("Now connected!");
+                //}).fail(function () {
+                //    alert("Could not Connect!");
+                //});
+
+                //genNotifyHub.server.sendMessage("SignalR loaded...");
+
+                //$.connection.hub.start(function () {
+                //    alert("Now connected!");
+                //    genNotifyHub.server.sendMessage("SignalR loaded...");
+                //}).fail(function () { alert("Not connected!!!!"); });
+
+
+                jQuery.connection.hub.start({ transport: ['webSockets', 'longPolling'] }, { waitForPageLoad: true })
+                .done(function () {
+                    alert('SignalR hub.start started OK');
+                    //NotifyHub.server.sendMessage("SignalR started and running...!!!");
+                })
+                .fail(function (e) {
+                    alert(' SignalR hub start failure: ' + e);
+                    console.info(e);
+                });
+
+                NotifyHub.client.addMessage = function (message) {
+                    var encodedMsg = $('<div />').text(message).html();
+                    // Add the message to the page. 
+                    $('#serverPush').text(encodedMsg);
+                };
+
+
+                $('#first').click(function () {
+                        NotifyHub.server.sendMessage("a");
+                    }
+                );
+
+                $('#second').click(function () {
+                        NotifyHub.server.sendMessage("b");
+                    }
+                );
+
+                $('#third').click(function () {
+                        NotifyHub.server.sendMessage("c");
+                    }
+                );
+
+                $('#fourth').click(function () {
+                        NotifyHub.server.sendMessage("d");
+                    }
+                );
+
+            });
+
+            //var connection = $.hubConnection();
+            //var katHubProxy = connection.createHubProxy('GenNotifyHub');
+            //katHubProxy.on('sendMessage', function (message) {
+            //    console.log(message);
+            //});
+
+            //connection.start()
+            //    .done(function () { console.log('Correttamente connesso!!!, connection ID=' + connection.id); })
+            //    .fail(function () { console.log('Non riesco a connettermi'); });
+
+        </script>
+
+    </head>
+    <body>
+        <form action="http:/localhost:999/CmdExec" method="post" >
+            Comando: <input type="text" value="valorecomando" name="MyCommand" />
+            <input type="submit" value="Invia il comando" name="bottone" />
+            <br />
+            <br />
+            <br />
+
+            <input type="button" value="Fatturazione::Primo step" name="first" id="first" />
+            <input type="button" value="Fatturazione::Secondo step" name="second" id="second" />
+            <input type="button" value="Fatturazione::terzo step" name="third" id="third" />
+            <input type="button" value="Fatturazione::quarto step" name="fourth" id="fourth" />
+
+        </form>
+        <div align="center" id="serverPush" style="color: red; font-size:larger; font-weight: 600" ></div>
+    </body>
+</html>

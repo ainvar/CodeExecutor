@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <script type="text/javascript" src="../Scripts/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="../Scripts/json2.js"></script>
+    <script type="text/javascript" src="../Scripts/XSockets.fallback.latest.min.js"></script>
+    <script type="text/javascript" src="../Scripts/XSockets.latest.min.js"></script>
+
+    <script type="text/javascript" >
+        var url = "ws://127.0.0.1:4502/";
+        var controller = "Generic";
+        debugger;
+        var ws = new XSockets.WebSocket(url + controller);
+
+        console.debug(ws);
+
+        ws.bind(XSockets.Events.open, function (connection) {
+
+            // The connection object will contain a object representing the client as follows:
+            //
+            // {
+            //   ClientGuid: "0f921316-f3fa-4fff-879f-9010ecf39a54",  // The clients connection unique identity
+            //   StorageGuid: "275722f7-2d01-45f9-bbf2-f61324a603e5" // The browsers unique storage identity
+            // }
+            console.log("connection object", connection);
+
+        });
+
+        ws.bind(XSockets.Events.onError, function (error) {
+            console.log("error object", error)
+        });
+
+        ws.bind(XSockets.Events.close, function () {
+            // This event will be fired when server disconnects / closes the current connection
+        });
+
+        ws.subscribe(XSockets.Events.open, function (connection) {
+            console.log("This is your connection properties", connection);
+        });
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
